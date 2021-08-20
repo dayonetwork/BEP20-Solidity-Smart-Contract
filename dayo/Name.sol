@@ -2,6 +2,11 @@
 
 pragma solidity ^0.8.0;
 
+/**
+ * @title Name and IP Validation Library
+ * @dev A utility library used for string verifications for domain names,
+ * aliases and IP validations.
+ */
 library Name{
     
     uint256 constant public domainMinLength = 3;
@@ -125,6 +130,14 @@ library Name{
         uint256 octet4 = stringToUint(substring(ip_, separators[2], b.length));
         
         if(octet1 > 255 || octet2 > 255 || octet3 > 255 || octet4 > 255)
+            revert InvalidIP();
+            
+        if( 
+            (octet1 > 0 && b[0] == 0x30) ||
+            (octet2 > 0 && b[separators[0] + 1] == 0x30) ||
+            (octet3 > 0 && b[separators[1] + 1] == 0x30) ||
+            (octet4 > 0 && b[separators[2] + 1] == 0x30)
+        )
             revert InvalidIP();
     }
     

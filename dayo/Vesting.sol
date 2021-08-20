@@ -5,6 +5,22 @@ pragma solidity ^0.8.0;
 import "../DayoBase.sol";
 import "./Time.sol";
 
+/**
+ * @title Simple Time Based Vesting Contract
+ * @dev Simple vesting scheme. Only the owner can set a vested amount to 
+ * an address. When tokens are vested, they are burned from the circulating
+ * supply and the vested value is saved in the "vestors" mapping.
+ * 
+ * The vesting is applied to the team address, which will be vesting for 
+ * 365 days (1 year) starting from the contract deployment time, and to
+ * ICO participants which will be enforced a 60 days vesting period.
+ * 
+ * After the vesting period has ended, the amount can be retrieved and
+ * minted into the circulating supply. This can be done either by the
+ * address owner or by the contract owner (this will be done for those
+ * who will not have retrieved their vested amount at the time of
+ * migration from BEP20 smart contrac to the Dayo blockchain).
+ */
 abstract contract Vesting is DayoBase{
     
     struct Vestor {
@@ -17,7 +33,7 @@ abstract contract Vesting is DayoBase{
     // Used in the onlyOwner vest() function
     error AddressIsAlreadyVesting();
     error InvalidVestingAmount();
-    error AmountCannotBe0();
+    error VestedAmountCannotBe0();
     
     /// There is no vested amount for this address
     error AddressIsNotVesting();
@@ -31,7 +47,7 @@ abstract contract Vesting is DayoBase{
         onlyOwner
     {
         if(amount_ == 0)
-            revert AmountCannotBe0();
+            revert VestedAmountCannotBe0();
 
         if(vestors[address_].releaseDate != 0)
             revert AddressIsAlreadyVesting();
@@ -52,7 +68,7 @@ abstract contract Vesting is DayoBase{
         _burn(tokenomics.team.holder, tokenAmount);
         vestedVolume += tokenAmount;
         vestors[tokenomics.team.holder].amount = tokenAmount;
-        vestors[tokenomics.team.holder].releaseDate = Time.getTime() + 180 days;
+        vestors[tokenomics.team.holder].releaseDate = Time.getTime() + 365 days;
     }
 
     function showVesting()
@@ -63,7 +79,7 @@ abstract contract Vesting is DayoBase{
         return vestors[msg.sender];
     }
     
-    function redeemVestedAmount()
+    function retrieveVestedAmount()
         external
     {
         if(vestors[msg.sender].releaseDate == 0)
@@ -80,7 +96,7 @@ abstract contract Vesting is DayoBase{
         vestors[msg.sender].amount = 0;
     }
     
-    function redeemVestedAmountToBeneficiary(address beneficiary_)
+    function retrieveVestedAmountToBeneficiary(address beneficiary_)
         external
         onlyOwner
     {
