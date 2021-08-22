@@ -11,6 +11,8 @@ import "./Name.sol";
  * on a name which can be used easier than a hexadecimal string. This will
  * be used in DApps in order to simplify the identification process (ex:
  * a chat where you can communicate with other addresses).
+ * @notice Old aliases remain stored in the aliasAddress mapping 
+ * to prevent impersonation
  */
 abstract contract Alias is DayoBase{
     
@@ -71,9 +73,6 @@ abstract contract Alias is DayoBase{
         Name.validateAlias(alias_);                                         // check if the lias complies
         if(aliasAddress[alias_] != address(0))                              // check if the alias is not taken
             revert AliasAlreadyTaken(alias_);
-            
-        if(bytes(addressAlias[address_]).length > 0)                        // check if the address has an alias
-            revert AddressAlreadyHasAnAlias(address_, alias_);
             
         addressAlias[address_] = alias_;                                    // set the alias to the address mapping
         aliasAddress[alias_] = address_;                                    // set the address to the alias mapping

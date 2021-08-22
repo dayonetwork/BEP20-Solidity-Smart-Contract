@@ -109,8 +109,9 @@ abstract contract DDNS is DayoBase{
         external
         onlyDomainOwner(domain_)
     {
-        _burn(msg.sender, domainPrice);
-        domains[domain_].ip = ip_;
+        if(daimyoList[msg.sender] == false)     // if the sender is not Daimyo
+            _burn(msg.sender, domainPrice);     // price (in DAYO) gets burned
+        domains[domain_].ip = ip_;              // change A record
     }
     
     /// @dev transferts a domain from the message caller address to thea new owner
@@ -120,8 +121,9 @@ abstract contract DDNS is DayoBase{
         external
         onlyDomainOwner(domain_)
     {
-        _burn(msg.sender, domainPrice);     // price (in DAYO) gets burned
-        domains[domain_].owner = owner_;    // change ownership
+        if(daimyoList[msg.sender] == false)     // if the sender is not Daimyo
+            _burn(msg.sender, domainPrice);     // price (in DAYO) gets burned
+        domains[domain_].owner = owner_;        // change ownership
     }
     
     /// @return the domain invertory of the message caller address

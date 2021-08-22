@@ -9,12 +9,15 @@ import "../DayoBase.sol";
  * @dev Daimyo reffers to a powerful address with the priviledge
  * of taking full advantage of the network infrastructure and 
  * functions without any conditions or limitations.
- * @notice In the current context it does not interact with other contracts.
+ * @notice It is only stipulated in the current contract that
+ * a Daimyo address may not pay for changing A records of an 
+ * already registered domain or for transfering it. The other
+ * functions like registering domains or setting aliases will
+ * be done through special onlyOwner functions in order to
+ * prevent abuse. It is also stipulated that Daimyo addresses 
+ * may not pay for extra traffic.
  */
 abstract contract Daimyo is DayoBase{
-    
-    /// @return bool - if the address is Daimyo
-    mapping (address => bool) public daimyoList;
     
     /// @dev grants Daimyo to the contract owner
     constructor(){

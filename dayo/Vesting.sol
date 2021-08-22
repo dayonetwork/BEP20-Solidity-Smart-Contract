@@ -30,10 +30,14 @@ abstract contract Vesting is DayoBase{
     
     mapping(address => Vestor) vestors;
     
-    // Used in the onlyOwner vest() function
-    error AddressIsAlreadyVesting();
-    error InvalidVestingAmount();
+    /// The vested amount cannot be 0
     error VestedAmountCannotBe0();
+    
+    /// An address cannot vest twice
+    error AddressIsAlreadyVesting();
+    
+    /// The vesting amount must be lower than the balance of the ICO address
+    error InvalidVestingAmount();
     
     /// There is no vested amount for this address
     error AddressIsNotVesting();
@@ -42,35 +46,45 @@ abstract contract Vesting is DayoBase{
     /// The vested amount has already been redeemed
     error VestedAmountAlreadyRedeemed();
 
+    /** 
+     * @dev only the owner can issue vesting for an address and the
+     * vested volume is burned from the ICO address balance, as only 
+     * ICO participants and the team will be vesting. 
+     */
+    /// @param address_ the vestor's address
+    /// @param amount_ the amount to be vested
     function vest(address address_, uint256 amount_)
         public
         onlyOwner
     {
-        if(amount_ == 0)
+        if(amount_ == 0)                                                // if amount to be vested is 0, then revert
             revert VestedAmountCannotBe0();
 
-        if(vestors[address_].releaseDate != 0)
+        if(vestors[address_].releaseDate != 0)                          // if the address is already vesting, then revert
             revert AddressIsAlreadyVesting();
             
-        if(amount_ == 0)
+        if(amount_ > balanceOf(tokenomics.ico.holder))                  // if the balance of the ICO address is lower than the amount to be vested, then revert
             revert InvalidVestingAmount();
         
-        _burn(tokenomics.ico.holder, amount_);
-        vestedVolume += amount_;
-        vestors[address_].amount = amount_;
-        vestors[address_].releaseDate = Time.getTime() + 60 days;
+        _burn(tokenomics.ico.holder, amount_);                          // burn the vested amount from the ICO address
+        vestedVolume += amount_;                                        // increase the total vested volume
+        vestors[address_].amount = amount_;                             // set the amount in the mapping
+        vestors[address_].releaseDate = Time.getTime() + 60 days;       // establish the vesting time and set it in the mapping
     }
 
+    /// @dev start team token vesting - called automatically at contract deployment
     function vestTeamTokens()
         internal
     {
-        uint256 tokenAmount = balanceOf(tokenomics.team.holder);
-        _burn(tokenomics.team.holder, tokenAmount);
-        vestedVolume += tokenAmount;
-        vestors[tokenomics.team.holder].amount = tokenAmount;
-        vestors[tokenomics.team.holder].releaseDate = Time.getTime() + 365 days;
+        uint256 tokenAmount = balanceOf(tokenomics.team.holder);                    // get the balance of the team address
+        _burn(tokenomics.team.holder, tokenAmount);                                 // burn it 
+        vestedVolume += tokenAmount;                                                // increase the total vested volume
+        vestors[tokenomics.team.holder].amount = tokenAmount;                       // set the amount in the mapping
+        vestors[tokenomics.team.holder].releaseDate = Time.getTime() + 365 days;    // establish the vesting time and set it in the mapping
     }
 
+    /// @dev show the vested amount of the message sender address
+    /// @return the vested amount and the release date
     function showVesting()
         external
         view
@@ -79,38 +93,45 @@ abstract contract Vesting is DayoBase{
         return vestors[msg.sender];
     }
     
+    /// @dev request the retrieval of the vested amount - mint it to the message sender's address balance
     function retrieveVestedAmount()
         external
     {
-        if(vestors[msg.sender].releaseDate == 0)
+        if(vestors[msg.sender].releaseDate == 0)                        // if the release date is 0, the address is not vesting, so revert
             revert AddressIsNotVesting();
             
-        if(vestors[msg.sender].releaseDate < Time.getTime())
+        if(vestors[msg.sender].releaseDate < Time.getTime())            // if the release date hasn't passed, then revert
             revert StillVesting(vestors[msg.sender].releaseDate);
             
-        if(vestors[msg.sender].amount == 0)
+        if(vestors[msg.sender].amount == 0)                             // if the amount is 0, but the releaseDate is not, than the amount has been redemed, so revert
             revert VestedAmountAlreadyRedeemed();
             
-        _mint(msg.sender, vestors[msg.sender].amount);
-        vestedVolume -= vestors[msg.sender].amount;
-        vestors[msg.sender].amount = 0;
+        _mint(msg.sender, vestors[msg.sender].amount);                  // mint the vested amount to the message sender's address balance
+        vestedVolume -= vestors[msg.sender].amount;                     // decrease the total vested volume
+        vestors[msg.sender].amount = 0;                                 // set the vested amount to 0 to make it clear that it has been redeemed
     }
     
+    /** 
+     * @dev retrieve the vested amount on the beneficiary's behalf
+     * used when seppuku is issued (selfdestruct) in order to pass
+     * relevant balances to the Dayo blockchain
+     */
+    /// @param beneficiary_ the address of the beneficiary
     function retrieveVestedAmountToBeneficiary(address beneficiary_)
         external
         onlyOwner
     {
-        if(vestors[beneficiary_].releaseDate == 0)
+        if(vestors[beneficiary_].releaseDate == 0)                      // if the release date is 0, the beneficiary is not vesting, so revert
             revert AddressIsNotVesting();
             
-        if(vestors[beneficiary_].releaseDate < Time.getTime())
+        if(vestors[beneficiary_].releaseDate < Time.getTime())          // if the release date hasn't passed, then revert
             revert StillVesting(vestors[beneficiary_].releaseDate);
             
-        if(vestors[beneficiary_].amount == 0)
+        if(vestors[beneficiary_].amount == 0)                           // if the amount is 0, but the releaseDate is not, than the amount has been redemed, so revert
             revert VestedAmountAlreadyRedeemed();
             
-        _mint(beneficiary_, vestors[beneficiary_].amount);
-        vestedVolume -= vestors[beneficiary_].amount;
-        vestors[beneficiary_].amount = 0;
+        _mint(beneficiary_, vestors[beneficiary_].amount);              // mint the vested amount to the beneficiary's address balance
+        vestedVolume -= vestors[beneficiary_].amount;                   // decrease the total vested volume
+        vestors[beneficiary_].amount = 0;                               // set the vested amount of the beneficiary to 0 to make it clear that it has been redeemed
     }
 }
