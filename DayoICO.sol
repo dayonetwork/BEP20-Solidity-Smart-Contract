@@ -32,7 +32,7 @@ abstract contract DayoICO is Alias, Staking, Vesting, DDNS, Network{
         ICOStage icoStage;
         uint256 slotPrice; // BNB that must be paid
         uint256 slotValue; // DAYO that will be received in exchange
-        uint256 slotsLeft; // decreasing from initial 2048
+        uint256 slotsLeft; // decreasing from initial 1000
         uint256 startTime;
     }
     
@@ -64,7 +64,7 @@ abstract contract DayoICO is Alias, Staking, Vesting, DDNS, Network{
     /// @dev value in DAYO (to be received)
     uint256 constant public round_3_slotValue = 50_000;
     
-    /// @dev 2048 participants each ICO round
+    /// @dev 1000 participants each ICO round
     uint256 constant public initialSlotsNumber = 1000;
 
     /// The ICO has not yet started
