@@ -6,6 +6,7 @@ import "./dayo/Alias.sol";
 import "./dayo/Staking.sol";
 import "./dayo/Vesting.sol";
 import "./dayo/DDNS.sol";
+import "./dayo/Network.sol";
 
 /**
  * @title Initial Coin Offering Contract
@@ -15,7 +16,7 @@ import "./dayo/DDNS.sol";
  * of the contract, but the amount and funding target for 
  * each round are preset.
  */
-abstract contract DayoICO is Alias, Staking, Vesting, DDNS{
+abstract contract DayoICO is Alias, Staking, Vesting, DDNS, Network{
     
     /// @dev 5 stages of the ICO
     enum ICOStage{

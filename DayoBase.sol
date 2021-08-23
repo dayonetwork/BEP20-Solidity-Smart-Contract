@@ -15,6 +15,9 @@ import "./openzeppelin/Ownable.sol";
  */
 contract DayoBase is ERC20, Ownable{
     
+    /// @return bool - if the address is Daimyo
+    mapping (address => bool) public daimyoList;
+    
     // Token volumes
     // Initial supply: 1_000_000_000
     // Maximum supply: 1_500_000_000
