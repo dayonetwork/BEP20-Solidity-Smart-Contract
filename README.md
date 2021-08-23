@@ -17,8 +17,6 @@ dayo/ - contains various solidity contracts which provide Dayo important functio
 |
 -- Staking.sol - staking module   
 |
--- Time.sol - library which provides reliable functions to get the current time   
-|
 -- Vesting.sol - vesting module   
 DayoBase.sol - base contract which assigns tokens to addresses based on the tokenomics and implements `selfdestruct` and `withdraw` functions   
 DayoICO.sol - initial coin offering contract   
