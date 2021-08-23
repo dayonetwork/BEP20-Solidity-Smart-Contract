@@ -95,19 +95,19 @@ abstract contract DayoICO is Alias, Staking, Vesting, DDNS, Network{
     {
         if(currentICOStage == ICOStage.NOT_STARTED){                    // starts the first ICO round
             currentICOStage = ICOStage.ROUND_ONE;
-            sale.round_1.startTime = Time.getTime();
+            sale.round_1.startTime = block.timestamp;
         } else if(currentICOStage == ICOStage.ROUND_ONE){               // starts the second ICO round
-            require(sale.round_1.startTime + window < Time.getTime());
+            require(sale.round_1.startTime + window < block.timestamp);
             
             currentICOStage = ICOStage.ROUND_TWO;
-            sale.round_2.startTime = Time.getTime();
+            sale.round_2.startTime = block.timestamp;
         } else if(currentICOStage == ICOStage.ROUND_TWO){
-            require(sale.round_2.startTime + window < Time.getTime());  // starts the third ICO round
+            require(sale.round_2.startTime + window < block.timestamp);  // starts the third ICO round
             
             currentICOStage = ICOStage.ROUND_THREE;
-            sale.round_3.startTime = Time.getTime();
+            sale.round_3.startTime = block.timestamp;
         } else {                                                        // ends the ICO
-            require(sale.round_3.startTime + window < Time.getTime());
+            require(sale.round_3.startTime + window < block.timestamp);
             
             currentICOStage = ICOStage.OVER;
         }
@@ -132,7 +132,7 @@ abstract contract DayoICO is Alias, Staking, Vesting, DDNS, Network{
             if(sale.round_1.slotsLeft == 0)                         // checks if there are any slots left
                 revert ICOTargetReached();
                 
-            if(sale.round_1.startTime + window > Time.getTime())    // checks if the round ended
+            if(sale.round_1.startTime + window > block.timestamp)    // checks if the round ended
                 revert ICORoundEnded();
                 
             if(msg.value != sale.round_1.slotPrice)                 // checks if the right amount is being sent
@@ -144,7 +144,7 @@ abstract contract DayoICO is Alias, Staking, Vesting, DDNS, Network{
             if(sale.round_2.slotsLeft == 0)                         // checks if there are any slots left
                 revert ICOTargetReached();
                 
-            if(sale.round_2.startTime + window > Time.getTime())    // checks if the round ended
+            if(sale.round_2.startTime + window > block.timestamp)    // checks if the round ended
                 revert ICORoundEnded();
                 
             if(msg.value != sale.round_2.slotPrice)                 // checks if the right amount is being sent
@@ -156,7 +156,7 @@ abstract contract DayoICO is Alias, Staking, Vesting, DDNS, Network{
             if(sale.round_3.slotsLeft == 0)                         // checks if there are any slots left
                 revert ICOTargetReached();
                 
-            if(sale.round_3.startTime + window > Time.getTime())    // checks if the round ended
+            if(sale.round_3.startTime + window > block.timestamp)    // checks if the round ended
                 revert ICORoundEnded();
                 
             if(msg.value != sale.round_3.slotPrice)                 // checks if the right amount is being sent

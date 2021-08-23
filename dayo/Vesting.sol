@@ -4,7 +4,6 @@
 pragma solidity ^0.8.0;
 
 import "../DayoBase.sol";
-import "./Time.sol";
 
 /**
  * @title Simple Time Based Vesting Contract
@@ -70,7 +69,7 @@ abstract contract Vesting is DayoBase{
         _burn(tokenomics.ico.holder, amount_);                          // burn the vested amount from the ICO address
         vestedVolume += amount_;                                        // increase the total vested volume
         vestors[address_].amount = amount_;                             // set the amount in the mapping
-        vestors[address_].releaseDate = Time.getTime() + 60 days;       // establish the vesting time and set it in the mapping
+        vestors[address_].releaseDate = block.timestamp + 60 days;      // establish the vesting time and set it in the mapping
     }
 
     /// @dev start team token vesting - called automatically at contract deployment
@@ -81,7 +80,7 @@ abstract contract Vesting is DayoBase{
         _burn(tokenomics.team.holder, tokenAmount);                                 // burn it 
         vestedVolume += tokenAmount;                                                // increase the total vested volume
         vestors[tokenomics.team.holder].amount = tokenAmount;                       // set the amount in the mapping
-        vestors[tokenomics.team.holder].releaseDate = Time.getTime() + 365 days;    // establish the vesting time and set it in the mapping
+        vestors[tokenomics.team.holder].releaseDate = block.timestamp + 365 days;   // establish the vesting time and set it in the mapping
     }
 
     /// @dev show the vested amount of the message sender address
@@ -101,7 +100,7 @@ abstract contract Vesting is DayoBase{
         if(vestors[msg.sender].releaseDate == 0)                        // if the release date is 0, the address is not vesting, so revert
             revert AddressIsNotVesting();
             
-        if(vestors[msg.sender].releaseDate < Time.getTime())            // if the release date hasn't passed, then revert
+        if(vestors[msg.sender].releaseDate < block.timestamp)           // if the release date hasn't passed, then revert
             revert StillVesting(vestors[msg.sender].releaseDate);
             
         if(vestors[msg.sender].amount == 0)                             // if the amount is 0, but the releaseDate is not, than the amount has been redemed, so revert
@@ -125,7 +124,7 @@ abstract contract Vesting is DayoBase{
         if(vestors[beneficiary_].releaseDate == 0)                      // if the release date is 0, the beneficiary is not vesting, so revert
             revert AddressIsNotVesting();
             
-        if(vestors[beneficiary_].releaseDate < Time.getTime())          // if the release date hasn't passed, then revert
+        if(vestors[beneficiary_].releaseDate < block.timestamp)         // if the release date hasn't passed, then revert
             revert StillVesting(vestors[beneficiary_].releaseDate);
             
         if(vestors[beneficiary_].amount == 0)                           // if the amount is 0, but the releaseDate is not, than the amount has been redemed, so revert

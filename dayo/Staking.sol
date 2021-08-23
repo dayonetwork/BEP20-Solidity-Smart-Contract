@@ -3,7 +3,6 @@
 pragma solidity ^0.8.0;
 
 import "../DayoBase.sol";
-import "./Time.sol";
 
 /**
  * @title Rewarded Staking Contract
@@ -75,7 +74,7 @@ abstract contract Staking is DayoBase{
         _burn(msg.sender, stake_);                              // staking volume is burned 
         stakedVolume += stake_;                                 // increase the total staked vokume
         stakeholders[msg.sender].stake += stake_;               // add stake to 
-        stakeholders[msg.sender].lastReward = Time.getTime();   // reset the reward timer
+        stakeholders[msg.sender].lastReward = block.timestamp;   // reset the reward timer
     }
 
     /// @dev remove staked amount 
@@ -91,7 +90,7 @@ abstract contract Staking is DayoBase{
             revert InsufficientStakingVolume(stake_, stakeholders[msg.sender].stake);
         
         stakeholders[msg.sender].stake -= stake_;               // reduce the staked volume of the address
-        stakeholders[msg.sender].lastReward = Time.getTime();   // reset the reward timer
+        stakeholders[msg.sender].lastReward = block.timestamp;   // reset the reward timer
         stakedVolume -= stake_;                                 // reduce the total staked volume
         _mint(msg.sender, stake_);                              // mint the removed stake to the address balance
     }
@@ -117,13 +116,14 @@ abstract contract Staking is DayoBase{
         return stakeholders[address_].stake != 0;
     }
 
+    /// @dev calculate reward for staking address
+    /// @param address_ staking address
     function calculateReward(address address_) 
         private
         view
         returns(uint256)
     {
-        // uint265 reward = (Time.getTime() - stakeholders[stake_holder].lastReward) / (60 * 60 * 24 * 30) * (stakeholders[stake_holder].stake / 10);
-        uint256 reward = (Time.getTime() - stakeholders[address_].lastReward) / (30) * (stakeholders[address_].stake / 100);
+        uint256 reward = (block.timestamp - stakeholders[address_].lastReward) / (30 days) * (stakeholders[address_].stake / 50);
         
         return reward;
     }
@@ -156,7 +156,7 @@ abstract contract Staking is DayoBase{
         if(calculateReward(msg.sender) < amount_)                           // if the requested amount is greater than the total reward, then revert
             revert AmountExceedsReward(amount_, calculateReward(msg.sender));
         
-        stakeholders[msg.sender].lastReward = Time.getTime();               // reset the reward timer (even if not all the reward is redeemed)
+        stakeholders[msg.sender].lastReward = block.timestamp;               // reset the reward timer (even if not all the reward is redeemed)
         _mint(msg.sender, amount_);
     }
 }

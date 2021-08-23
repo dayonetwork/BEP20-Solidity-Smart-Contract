@@ -36,7 +36,7 @@ abstract contract Alias is DayoBase{
     
     /// @dev sets the alias dayo to the contract creator
     constructor(){
-        setAlias("dayo");
+        setAliasForAddress("dayo", msg.sender);
     }
     
     /// @dev called by the owner of the contract to change the "aliasPrice" state variable
@@ -69,6 +69,7 @@ abstract contract Alias is DayoBase{
     /// @param address_ the address the alias will be set to
     function setAliasForAddress(string memory alias_, address address_)
         public
+        onlyOwner
     {
         Name.validateAlias(alias_);                                         // check if the lias complies
         if(aliasAddress[alias_] != address(0))                              // check if the alias is not taken

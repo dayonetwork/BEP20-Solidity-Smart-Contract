@@ -51,6 +51,6 @@ Coming soon...
 
 ## Testnet
 
-Dayo is live on the BSC Testnet at 0x9973bdf53f7a3e5afd1837779c5f08180ab13eee
+Dayo is live on the BSC Testnet at 0x76AdC63fed6dDE31b77330C1DF25A2E380f8EF40
 
-https://testnet.bscscan.com/token/0x9973bdf53F7a3e5Afd1837779C5f08180ab13eeE
+https://testnet.bscscan.com/token/0x76AdC63fed6dDE31b77330C1DF25A2E380f8EF40
