@@ -58,14 +58,14 @@ abstract contract DayoICO is Alias, Staking, Vesting, DDNS, Network{
     uint256 constant public round_3_slotPrice = 1;
     
     /// @dev value in DAYO (to be received)
-    uint256 constant public round_1_slotValue = 600_000;
+    uint256 constant public round_1_slotValue = 150_000;
     /// @dev value in DAYO (to be received)
-    uint256 constant public round_2_slotValue = 400_000;
+    uint256 constant public round_2_slotValue = 100_000;
     /// @dev value in DAYO (to be received)
-    uint256 constant public round_3_slotValue = 200_000;
+    uint256 constant public round_3_slotValue = 50_000;
     
     /// @dev 2048 participants each ICO round
-    uint256 constant public initialSlotsNumber = 2048;
+    uint256 constant public initialSlotsNumber = 1000;
 
     /// The ICO has not yet started
     error ICONotYetStarted();
