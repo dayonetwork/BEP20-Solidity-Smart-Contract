@@ -33,3 +33,7 @@ When deployed, 5 addresses must be provided which should be controlled by the ow
 4. The reserve address - Dayo reserve
 5. The advisor's address - advisors' funds
 
+## Security
+
+###Mythril scan result:
+`The analysis was completed successfully. No issues were detected.`
