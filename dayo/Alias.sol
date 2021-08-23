@@ -36,7 +36,7 @@ abstract contract Alias is DayoBase{
     
     /// @dev sets the alias dayo to the contract creator
     constructor(){
-        setAlias("Dayo");
+        setAlias("dayo");
     }
     
     /// @dev called by the owner of the contract to change the "aliasPrice" state variable

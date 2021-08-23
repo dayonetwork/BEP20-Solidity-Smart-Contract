@@ -25,7 +25,7 @@ contract Dayo is DayoICO{
                     address advisorsAddress
                 ) 
         DayoBase(
-            "DayoTest0", "DT0",
+            "Dayo", "DYO",
             icoAddress, 
             devAddress,
             teamAddress, 

@@ -44,7 +44,7 @@ library Time{
      * @return the current time
      */ 
     function getTime() 
-        internal
+        public
         view
         returns(uint256)
     {

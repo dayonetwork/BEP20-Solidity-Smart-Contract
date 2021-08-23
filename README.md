@@ -24,9 +24,15 @@ DayoBase.sol - base contract which assigns tokens to addresses based on the toke
 DayoICO.sol - initial coin offering contract   
 Dayo.sol - the main contract which should be deployed - extends all other contracts   
 
+## Compilation
+
+Compiled with solc `0.8.4+commit.c7e474f2`
+
+Optimization enabled!
+
 ## Deployment
 
-When deployed, 5 addresses must be provided which should be controlled by the owner:
+When deployed, 5 addresses must be provided to the constructor which should be controlled by the owner:
 1. The ICO address - from which tokens will be provided to ICO participants
 2. The development address - funds used for development purposes
 3. The team address - team reserved tokens
