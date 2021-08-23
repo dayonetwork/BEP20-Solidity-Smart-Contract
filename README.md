@@ -43,7 +43,7 @@ When deployed, 5 addresses must be provided to the constructor which should be c
 
 `The analysis was completed successfully. No issues were detected.`
 
-### CertiK audit
+### Audit
 
 Coming soon...
 
