@@ -4,7 +4,7 @@
 
 openzeppelin/ - contains openzeppelin libraries that are safe to use   
 dayo/ - contains various solidity contracts which provide Dayo important functionalities: staking, vesting, decentralized DNS, and others   
-        Alias.sol - assign simple aliases to addresses   
+ -- Alias.sol - assign simple aliases to addresses   
         Daimyo.sol - privileged addresses which must not pay for network functions   
         DDNS.sol - register and transfer domains and manage the A record   
         Name.sol - library which provides various checks for DDNS and aliases   
