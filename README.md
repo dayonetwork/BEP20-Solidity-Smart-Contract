@@ -48,3 +48,9 @@ When deployed, 5 addresses must be provided to the constructor which should be c
 ### CertiK audit
 
 Coming soon...
+
+## Testnet
+
+Dayo is live on the BSC Testnet at 0x9973bdf53f7a3e5afd1837779c5f08180ab13eee
+
+https://testnet.bscscan.com/token/0x9973bdf53F7a3e5Afd1837779C5f08180ab13eeE
